@@ -9,15 +9,20 @@ http.createServer(function(req, res) {
   let q = url.parse(req.url, true);
   // let text = q.year + " " + q.month;
   // res.write('<br>');
+  if( q.pathname === '/') {
+    q.pathname = '/index.html';
+  }
   let filename = "." + q.pathname;
+  // console.log(filename);
 
   fs.readFile(filename, function(err, data) {
     if(err) {
       res.writeHead(404, {'Content-Type': 'text/html'});
-
-      return res.end("page not found");
+      return fs.createReadStream("./404.html").pipe(res);
     }
     res.writeHead(200, {'Content-Type': 'text/html'});
+
+    // console.log(data);
     res.write(data);
     return res.end();
   });
